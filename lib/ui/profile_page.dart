@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+// Halaman Profil Pengguna & Koleksi Playlist
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Data dummy untuk daftar playlist pengguna
     final List<Map<String, dynamic>> userPlaylists = [
       {
         "title": "Lagu Disukai",
@@ -33,6 +35,7 @@ class ProfilePage extends StatelessWidget {
     ];
 
     return Scaffold(
+      // 1. App Bar Atas
       appBar: AppBar(
         title: const Text(
           'Profil Saya',
@@ -41,10 +44,14 @@ class ProfilePage extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
+
+      // SingleChildScrollView membuat seluruh halaman bisa di-scroll agar responsif di layar kecil
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20),
+
+            // 2. Foto Profil (Avatar) & Info Pengguna
             const CircleAvatar(
               radius: 50,
               backgroundColor: Colors.deepPurpleAccent,
@@ -62,6 +69,8 @@ class ProfilePage extends StatelessWidget {
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 15),
+
+            // 3. Tombol Edit Profil
             OutlinedButton.icon(
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -81,6 +90,8 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
             const Divider(thickness: 1, indent: 20, endIndent: 20),
             const SizedBox(height: 10),
+
+            // 4. Header Judul Bagian Playlist
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
@@ -107,6 +118,9 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
+
+            // 5. List Playlist Pengguna
+            // shrinkWrap: true & NeverScrollableScrollPhysics wajib digunakan jika ListView berada di dalam SingleChildScrollView
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
