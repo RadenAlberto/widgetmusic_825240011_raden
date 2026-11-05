@@ -21,4 +21,15 @@ class Song {
       previewUrl: json['previewUrl'] ?? '', // URL audio mp3 (preview 30 detik)
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Song &&
+          runtimeType == other.runtimeType &&
+          trackName == other.trackName &&
+          artistName == other.artistName;
+
+  @override
+  int get hashCode => trackName.hashCode ^ artistName.hashCode;
 }
