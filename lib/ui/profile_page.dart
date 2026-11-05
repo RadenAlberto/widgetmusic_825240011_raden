@@ -108,7 +108,7 @@ class ProfilePage extends StatelessWidget {
                                     width: 48,
                                     height: 48,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => Container(
+                                    errorBuilder: (context, error, stackTrace) => Container(
                                       width: 48,
                                       height: 48,
                                       color: Colors.deepPurple.shade100,
