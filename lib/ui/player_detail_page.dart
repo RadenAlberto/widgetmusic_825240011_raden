@@ -11,10 +11,10 @@ class PlayerDetailPage extends StatefulWidget {
   final int initialIndex;
 
   const PlayerDetailPage({
-    Key? key,
+    super.key,
     required this.songsList,
     required this.initialIndex,
-  }) : super(key: key);
+  });
 
   @override
   State<PlayerDetailPage> createState() => _PlayerDetailPageState();
