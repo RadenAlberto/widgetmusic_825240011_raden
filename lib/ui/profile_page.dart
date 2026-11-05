@@ -4,8 +4,111 @@ import '../service/favorites_service.dart';
 import 'player_detail_page.dart';
 
 // Halaman Profil Pengguna & Koleksi Playlist
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  // Data profil pengguna yang dapat diubah
+  String _userName = 'Raden Alberto Lumintu Negoro';
+  String _userBio = 'Mahasiswa Sistem Informasi UNTAR';
+  String _avatarUrl = '';
+
+  // Dialog untuk mengedit profil (Nama, Bio, Foto Profil)
+  void _showEditProfileDialog() {
+    final TextEditingController nameController = TextEditingController(text: _userName);
+    final TextEditingController bioController = TextEditingController(text: _userBio);
+    final TextEditingController avatarController = TextEditingController(text: _avatarUrl);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Row(
+            children: [
+              Icon(Icons.edit, color: Colors.deepPurpleAccent),
+              SizedBox(width: 8),
+              Text('Edit Profil', style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Nama Lengkap',
+                    hintText: 'Masukkan nama Anda',
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: bioController,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    labelText: 'Deskripsi Diri',
+                    hintText: 'Masukkan bio singkat',
+                    prefixIcon: Icon(Icons.description),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: avatarController,
+                  decoration: const InputDecoration(
+                    labelText: 'URL Foto Profil (Opsional)',
+                    hintText: 'https://example.com/foto.jpg',
+                    prefixIcon: Icon(Icons.image),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final newName = nameController.text.trim();
+                final newBio = bioController.text.trim();
+                final newAvatar = avatarController.text.trim();
+
+                if (newName.isNotEmpty) {
+                  setState(() {
+                    _userName = newName;
+                    _userBio = newBio.isEmpty ? 'Belum ada deskripsi' : newBio;
+                    _avatarUrl = newAvatar;
+                  });
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Profil berhasil diperbarui!'),
+                      backgroundColor: Colors.deepPurple,
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurpleAccent,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   // Dialog untuk membuat playlist baru
   void _showCreatePlaylistDialog(BuildContext context) {
@@ -166,33 +269,37 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
 
             // 2. Foto Profil (Avatar) & Info Pengguna
-            const CircleAvatar(
+            CircleAvatar(
               radius: 50,
               backgroundColor: Colors.deepPurpleAccent,
-              child: Icon(Icons.person, size: 50, color: Colors.white),
+              backgroundImage: _avatarUrl.isNotEmpty ? NetworkImage(_avatarUrl) : null,
+              child: _avatarUrl.isEmpty
+                  ? const Icon(Icons.person, size: 50, color: Colors.white)
+                  : null,
             ),
             const SizedBox(height: 15),
-            const Text(
-              'Raden Alberto Lumintu Negoro',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                _userName,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
             ),
             const SizedBox(height: 5),
-            const Text(
-              'Mahasiswa Sistem Informasi UNTAR',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                _userBio,
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
             ),
             const SizedBox(height: 15),
 
             // 3. Tombol Edit Profil
             OutlinedButton.icon(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Fitur edit profil belum tersedia'),
-                  ),
-                );
-              },
+              onPressed: _showEditProfileDialog,
               icon: const Icon(Icons.edit, size: 18),
               label: const Text('Edit Profil'),
               style: OutlinedButton.styleFrom(
@@ -308,3 +415,4 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
+
